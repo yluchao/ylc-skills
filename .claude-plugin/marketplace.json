@@ -1,0 +1,17 @@
+
+{
+  "name": "ylc-agent-skills",
+  "owner": { "name": "ylc" },
+  "plugins": [
+    {
+      "name": "project-learning-report-fastapi",
+      "description": "FastAPI analysis Skills (LSP-first) — learning report, routes inventory",
+      "version": "0.1.1",
+      "source": "./skills",
+      "strict": false,
+      "skills": [
+        "./project-learning-report-fastapi"
+      ]
+    }
+  ]
+}
