@@ -23,6 +23,15 @@ def main():
     if not re.search(r'`[^`]+\.py:\d+:\d+`', text):
         raise SystemExit('missing any `file.py:line:col` location in report')
 
+    # 去除所有 HTML 注释标记
+    text = re.sub(r'<!-- [A-Z_]+_START -->\s*', '', text)
+    text = re.sub(r'\s*<!-- [A-Z_]+_END -->\s*', '\n', text)
+    text = re.sub(r'\n\n+', '\n\n', text)  # 清理多余的空行
+
+    # 写回清理后的报告
+    with open(report, 'w', encoding='utf-8') as f:
+        f.write(text)
+
     if os.path.exists(prog):
         try:
             os.remove(prog)

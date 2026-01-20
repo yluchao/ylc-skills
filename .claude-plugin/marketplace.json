@@ -6,11 +6,21 @@
     {
       "name": "project-learning-report-fastapi",
       "description": "FastAPI analysis Skills (LSP-first) — learning report, routes inventory",
-      "version": "0.1.1",
+      "version": "0.1.7",
       "source": "./skills",
       "strict": false,
       "skills": [
         "./project-learning-report-fastapi"
+      ]
+    },
+    {
+      "name": "secure-code-review",
+      "description": "安全代码审查的专业技能和方法论",
+      "version": "1.0.0",
+      "source": "./skills",
+      "strict": false,
+      "skills": [
+        "./secure-code-review"
       ]
     }
   ]

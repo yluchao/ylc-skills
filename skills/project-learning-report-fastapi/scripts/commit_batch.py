@@ -34,6 +34,46 @@ def insert_between(report: str, start: str, end: str, payload: str, mode: str='a
     return pre + start + "\n" + new_mid + "\n" + end + post
 
 
+def parse_esp_content(chunk: str) -> dict:
+    """
+    解析 ErrorsSecurityPerf chunk 的内容。
+    返回包含 errors、perf、security 三个部分的字典。
+    每个部分包含标题下的内容（去除开头的标题行）。
+    """
+    # 按行分割
+    lines = chunk.split('\n')
+    sections = {'errors': '', 'perf': '', 'security': ''}
+
+    current_key = None
+    current_lines = []
+
+    for line in lines:
+        # 检测标题行
+        if line.startswith('## 错误处理'):
+            if current_key is not None:
+                sections[current_key] = '\n'.join(current_lines).strip()
+            current_key = 'errors'
+            current_lines = []
+        elif line.startswith('## 性能考虑'):
+            if current_key is not None:
+                sections[current_key] = '\n'.join(current_lines).strip()
+            current_key = 'perf'
+            current_lines = []
+        elif line.startswith('## 安全考虑'):
+            if current_key is not None:
+                sections[current_key] = '\n'.join(current_lines).strip()
+            current_key = 'security'
+            current_lines = []
+        elif current_key is not None:
+            current_lines.append(line)
+
+    # 添加最后一个 section
+    if current_key is not None:
+        sections[current_key] = '\n'.join(current_lines).strip()
+
+    return sections
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--feature', required=True)
@@ -68,9 +108,14 @@ def main():
         elif symbol == 'DataFlow':
             report = insert_between(report, '<!-- DATA_FLOW_START -->', '<!-- DATA_FLOW_END -->', chunk, mode='replace')
         elif symbol == 'ErrorsSecurityPerf':
-            report = insert_between(report, '<!-- ERRORS_START -->', '<!-- ERRORS_END -->', chunk, mode='replace')
-            report = insert_between(report, '<!-- PERF_START -->', '<!-- PERF_END -->', chunk, mode='replace')
-            report = insert_between(report, '<!-- SECURITY_START -->', '<!-- SECURITY_END -->', chunk, mode='replace')
+            # 解析 chunk 中的三个部分并分别插入
+            esp_sections = parse_esp_content(chunk)
+            if esp_sections['errors']:
+                report = insert_between(report, '<!-- ERRORS_START -->', '<!-- ERRORS_END -->', esp_sections['errors'], mode='replace')
+            if esp_sections['perf']:
+                report = insert_between(report, '<!-- PERF_START -->', '<!-- PERF_END -->', esp_sections['perf'], mode='replace')
+            if esp_sections['security']:
+                report = insert_between(report, '<!-- SECURITY_START -->', '<!-- SECURITY_END -->', esp_sections['security'], mode='replace')
         elif symbol == 'Dependencies':
             report = insert_between(report, '<!-- DEPS_START -->', '<!-- DEPS_END -->', chunk, mode='replace')
         else:
