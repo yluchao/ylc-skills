@@ -1,6 +1,6 @@
 ---
 
-name: project-learning-report-fastapi
+name: fastapi-api-report
 
 description: 生成 FastAPI 项目学习报告,接口、方法执行报告，完成后自动清理，仅保留最终报告。
 
