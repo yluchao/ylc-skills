@@ -22,6 +22,16 @@
       "skills": [
         "./secure-code-review"
       ]
+    },
+    {
+      "name": "reinforced-learning",
+      "description": "强化学习——个人快速学习加速器，以首席战略官视角输出可立即执行的个性化学习行动方案",
+      "version": "1.0.0",
+      "source": "./skills",
+      "strict": false,
+      "skills": [
+        "./reinforced-learning"
+      ]
     }
   ]
 }
